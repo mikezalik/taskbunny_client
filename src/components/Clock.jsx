@@ -2,14 +2,11 @@ import React, { useEffect, useState } from "react";
 
 // clock component
 const Clock = (props) => {
-	//sets state with new date object
 	const [clock, setClock] = useState(new Date());
 
 	useEffect(() => {
-		//sets timer with 1 second interval
 		const timer = setInterval(() => tick(), 1000);
 
-		//stops interval
 		return function cleanup() {
 			clearInterval(timer);
 		};

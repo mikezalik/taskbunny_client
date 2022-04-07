@@ -9,9 +9,22 @@ export default function Tasks() {
 	const [editTask, setEditTask] = useState("");
 	const [taskList, setTaskList] = useState([]);
 	const [taskId, setTaskId] = useState(null);
+	const [token, setToken] = useState("");
+
+	const tokenFetch = () => {
+		const token = localStorage.getItem("token");
+		setToken(token);
+		console.log(token);
+		return token;
+	};
 
 	const fetchTasks = async () => {
-		const data = await axios.get(`${flaskUrl}/tasks`);
+		tokenFetch();
+		const data = await axios.get(`${flaskUrl}/tasks`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 		const { tasks } = data.data;
 		setTaskList(tasks);
 	};
@@ -41,6 +54,7 @@ export default function Tasks() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		tokenFetch();
 		try {
 			if (editTask) {
 				const data = await axios.put(`${flaskUrl}/tasks/${taskId}`, {
@@ -56,6 +70,9 @@ export default function Tasks() {
 				setTaskList(updatedList);
 			} else {
 				const data = await axios.post(`${flaskUrl}/tasks`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
 					task: task,
 				});
 				setTaskList([...taskList, data.data]);

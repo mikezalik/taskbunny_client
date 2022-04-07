@@ -1,27 +1,32 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/NavBar";
-import Quotes from "./components/Quotes";
-import Tasks from "./components/Tasks";
+import Login from "./components/Login";
+import HomePage from "./components/HomePage";
+import useToken from "./utilities/useToken";
+
 import "./App.css";
-import Clock from "./components/Clock";
 
 function App() {
+	const { token, removeToken, setToken } = useToken();
+
 	return (
 		<div>
-			<Navbar />
-			<div class='container'>
-				<div class='row'>
-					<div class='col'>
-						<Tasks />
-					</div>
-					<div class='col'>
-						<Quotes />
-					</div>
-					<div>
-						<br />
-						<Clock />
-					</div>
-				</div>
-			</div>
+			<BrowserRouter>
+				<Navbar token={removeToken} />
+
+				{!token && token !== "" && token !== undefined ? (
+					<Login setToken={setToken} />
+				) : (
+					<>
+						<Routes>
+							<Route
+								path={"/"}
+								element={<HomePage setToken={setToken} token={token} />}
+							/>
+						</Routes>
+					</>
+				)}
+			</BrowserRouter>
 		</div>
 	);
 }
