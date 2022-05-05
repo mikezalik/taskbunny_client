@@ -40,7 +40,9 @@ export default function Tasks() {
 	const handleDelete = async (id) => {
 		try {
 			await axios.delete(`${flaskUrl}/tasks/${id}`);
-			const updatedList = taskList.filter((task) => task.id !== id);
+			const updatedList = taskList.filter(
+				(task) => task.id !== id
+			);
 			setTaskList(updatedList);
 		} catch (err) {
 			console.log(err.message);
@@ -57,9 +59,12 @@ export default function Tasks() {
 		tokenFetch();
 		try {
 			if (editTask) {
-				const data = await axios.put(`${flaskUrl}/tasks/${taskId}`, {
-					task: editTask,
-				});
+				const data = await axios.put(
+					`${flaskUrl}/tasks/${taskId}`,
+					{
+						task: editTask,
+					}
+				);
 				const updatedTask = data.data.task;
 				const updatedList = taskList.map((task) => {
 					if (task.id === taskId) {
@@ -69,12 +74,15 @@ export default function Tasks() {
 				});
 				setTaskList(updatedList);
 			} else {
-				const data = await axios.post(`${flaskUrl}/tasks`, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-					task: task,
-				});
+				const data = await axios.post(
+					`${flaskUrl}/tasks`,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+						task: task,
+					}
+				);
 				setTaskList([...taskList, data.data]);
 			}
 			setTask("");
@@ -86,28 +94,48 @@ export default function Tasks() {
 	};
 
 	useEffect(() => {
-		fetchTasks();
+		const fetchTasks = async () => {
+			tokenFetch();
+			const data = await axios.get(`${flaskUrl}/tasks`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			const { tasks } = data.data;
+			setTaskList(tasks);
+		};
+		
 	}, []);
 
 	return (
-		<div class='container-fluid text-center list-group'>
-			<div class='col'>
+		<div class="container-fluid text-center list-group">
+			<div class="col">
 				<br />
-				<section class='input-group input-group-sm mb-3 text-center'>
+				<section class="input-group input-group-sm mb-3 text-center">
 					<form onSubmit={handleSubmit}>
-						<label htmlFor='task'>Enter Task</label>
+						<label htmlFor="task">
+							Enter Task
+						</label>
 						<br />
 						<input
-							class='form-control'
-							onChange={(e) => handleChange(e, "task")}
-							type='text'
-							name='task'
-							id='task'
-							placeholder='List your task here'
+							class="form-control"
+							onChange={(e) =>
+								handleChange(
+									e,
+									"task"
+								)
+							}
+							type="text"
+							name="task"
+							id="task"
+							placeholder="List your task here"
 							value={task}
 						/>
 						<br />
-						<button class='btn btn-info' type='submit'>
+						<button
+							class="btn btn-info"
+							type="submit"
+						>
 							Submit
 						</button>
 					</form>
@@ -115,18 +143,40 @@ export default function Tasks() {
 				<section>
 					<ul>
 						{taskList.map((task) => {
-							if (taskId === task.id) {
+							if (
+								taskId ===
+								task.id
+							) {
 								return (
 									<li>
-										<form onSubmit={handleSubmit} key={task.id}>
+										<form
+											onSubmit={
+												handleSubmit
+											}
+											key={
+												task.id
+											}
+										>
 											<input
-												onChange={(e) => handleChange(e, "edit")}
-												type='text'
-												name='editTask'
-												id='editTask'
-												value={editTask}
+												onChange={(
+													e
+												) =>
+													handleChange(
+														e,
+														"edit"
+													)
+												}
+												type="text"
+												name="editTask"
+												id="editTask"
+												value={
+													editTask
+												}
 											/>
-											<button class='btn btn-info' type='submit'>
+											<button
+												class="btn btn-info"
+												type="submit"
+											>
 												Submit
 											</button>
 										</form>
@@ -136,18 +186,39 @@ export default function Tasks() {
 								return (
 									<div>
 										<br />
-										<li class='list-group' key={task.id}>
-											{format(new Date(task.created_at), "MM/dd, p")}:{" "}
-											{task.task}
+										<li
+											class="list-group"
+											key={
+												task.id
+											}
+										>
+											{format(
+												new Date(
+													task.created_at
+												),
+												"MM/dd, p"
+											)}
+											:{" "}
+											{
+												task.task
+											}
 											<button
-												class='btn btn-secondary'
-												onClick={() => toggleEdit(task)}
+												class="btn btn-secondary"
+												onClick={() =>
+													toggleEdit(
+														task
+													)
+												}
 											>
 												Edit
 											</button>
 											<button
-												class='btn btn-danger'
-												onClick={() => handleDelete(task.id)}
+												class="btn btn-danger"
+												onClick={() =>
+													handleDelete(
+														task.id
+													)
+												}
 											>
 												Delete
 											</button>
