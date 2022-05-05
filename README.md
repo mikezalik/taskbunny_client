@@ -1,8 +1,8 @@
-# taskbunny_api
+# taskbunny_client
 
 ## To-Do
-- Authentication
-- React Router
+- Fix Netlify path so register/login feature works.
+
 
 
 # Getting Started with Create React App
