@@ -15,7 +15,7 @@ function App() {
 				<Navbar token={removeToken} />
 
 				{!token && token !== "" && token !== undefined ? (
-					<Login setToken={setToken} />
+					<Login path={"/login"} setToken={setToken} />
 				) : (
 					<>
 						<Routes>
